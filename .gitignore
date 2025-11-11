@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+instance/
+.env
+.venv/
+migrations/__pycache__/
+app/__pycache__/
+
+# Flask
+*.log
+
+# Vue / Node
+web/node_modules/
+web/dist/
+web/.env.local
+web/.cache/
+web/.npm/
+web/.pnpm-store/
+
+# IDEs / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.egg-info/
