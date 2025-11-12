@@ -1,31 +1,26 @@
-from enum import unique
+from datetime import datetime, timezone
+from sqlalchemy.ext.hybrid import hybrid_property
 
-from app import db
-from datetime import datetime
-
+from app.extension import db,pwd_context
 
 class User(db.Model):
-
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(100))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    _password = db.Column("password", db.String(255),nullable=False)
 
-    def __repr__(self):
-        # Provide String rep of model Instance
-        return f"<User {self.name}>"
+    active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    last_login = db.Column(db.DateTime)
 
-    def to_dict(self):
-        # I dont understand what it says
-        # The to_dict method allows easy serialization of the model to JSON
-        # which is useful when returning data from API endpoints.
-        return {
-            "id": self.id,
-            "name": self.name,
-            "email": self.email,
-            "created_at": self.created_at.isoformat(),
-        }
+    @hybrid_property 
+    def password(self) -> str: # type: ignore
+        return self._password
+    
+    @password.setter 
+    def password(self, value:str) -> None:
+        self._password = pwd_context.hash(value)
+
+
