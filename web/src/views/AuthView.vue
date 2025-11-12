@@ -25,56 +25,66 @@
 </template>
 
 <script setup>
-    import { ref, computed } from "vue";
-    import { useRoute } from "vue-router";
-    import { AuthService } from "@/services/api";
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
+import { AuthService } from "@/services/api";
 
-    const route = useRoute();
-    const mode = computed(() => route.query.mode || "login");
+const route = useRoute();
+const mode = computed(() => route.query.mode || "login");
 
-    // Reactive form data
-    const name = ref("");
-    const email = ref("");
-    const password = ref("");
-    const message = ref("");
-    const isLoading = ref(false);
+// Reactive state
+const name = ref("");
+const email = ref("");
+const password = ref("");
+const message = ref("");
+const isError = ref(false);
+const isLoading = ref(false);
 
-    // Submit Handler
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        isLoading.value = true;
+// Submit Handler
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    isLoading.value = true;
+    message.value = "";
+    isError.value = false;
 
-        try {
-            if (mode.value === "signup") {
-                const payload = {
-                    name: name.value,
-                    email: email.value,
-                    password: password.value,
-                };
-
-                const res = await AuthService.signup(payload);
-                message.value = res.data.message;
-                setTimeout(() => {
-                    name.value = "";
-                    email.value = "";
-                    password.value = "";
-                }, 1000);
-                setTimeout(() => {
-                    message.value = "";
-                }, 4000);
-            } else {
-                const payload = {
-                    email: email.value,
-                    password: password.value,
-                };
-
-                const res = await AuthService.login(payload);
-                message.value = res.data.message;
-            }
-        } catch (err) {
-            message.value = err.response?.data?.error || "An error occurred.";
-        } finally {
-            isLoading.value = false;
+    try {
+        let res;
+        if (mode.value === "signup") {
+            const payload = { name: name.value, email: email.value, password: password.value };
+            res = await AuthService.signup(payload);
+        } else {
+            const payload = { email: email.value, password: password.value };
+            res = await AuthService.login(payload);
         }
-    };
+
+        // ✅ Success
+        
+        message.value = res.data.msg || "Success!";
+        isError.value = false;
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("refresh_token", res.data.refresh_token);
+
+        
+
+        // Clear inputs after success
+        name.value = "";
+        email.value = "";
+        password.value = "";
+
+    } catch (err) {
+        // ❌ Error
+        const res = err.response?.data;
+        if (res?.errors) {
+            // Show first validation error
+            const firstErrorField = Object.keys(res.errors)[0];
+            message.value = res.errors[firstErrorField][0];
+        } else {
+            message.value = res?.msg || "An unexpected error occurred.";
+        }
+        isError.value = true;
+    } finally {
+        isLoading.value = false;
+    }
+};
+
 </script>

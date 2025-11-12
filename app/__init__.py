@@ -1,27 +1,19 @@
-from flask import Flask,render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from dotenv import load_dotenv
-from flask_cors import CORS
 import os
+from flask import Flask
+from flask_cors import CORS
+from dotenv import load_dotenv
+
+from app.routes import auth_routes
+from app.extension import db, jwt ,migrate
 
 load_dotenv()
 
-db = SQLAlchemy()
-migrate = Migrate()
+app = Flask(__name__)
+app.config.from_object("app.config")
 
-def create_app():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+migrate.init_app(app, db)
+jwt.init_app(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:8080"])
 
-    db.init_app(app)
-    migrate.init_app(app, db)
-    CORS(app, resources={r"/*":{'origins':"*"}})
-
-
-    # Register blueprints here
-    from app.routes import auth_routes
-    app.register_blueprint(auth_routes.auth_bp)
-
-    return app
+app.register_blueprint(auth_routes.auth_bp)

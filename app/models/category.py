@@ -1,6 +1,6 @@
 from enum import unique
 
-from app import db
+from app.extension import db,pwd_context
 from datetime import datetime
 
 class Category(db.Model):

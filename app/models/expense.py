@@ -1,7 +1,8 @@
 from enum import unique
-
-from app import db
 from datetime import datetime
+
+from app.extension import db,pwd_context
+
 
 class Expense(db.Model):
 
