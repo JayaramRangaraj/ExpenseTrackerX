@@ -6,14 +6,14 @@
                 <span class="fw-semibold">MyApp</span>
             </router-link>
 
-            <!-- Toggler -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Menu -->
             <div class="collapse navbar-collapse" id="navbarMenu">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                <!-- NOT LOGGED IN NAVBAR -->
+                <ul v-if="!authStore.isLoggedIn" class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <router-link class="nav-link" to="/" exact-active-class="active">Home</router-link>
                     </li>
@@ -25,16 +25,65 @@
                     </li>
                 </ul>
 
+                <!-- LOGGED IN NAVBAR -->
+                <ul v-else class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/dashboard">Dashboard</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/expenses">Expenses</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/profile">Profile</router-link>
+                    </li>
+                </ul>
+
                 <!-- Right-aligned Buttons -->
                 <div class="d-flex">
-                    <router-link to="/auth?mode=login" class="btn btn-outline-primary me-2">Login</router-link>
-                    <router-link to="/auth?mode=signup" class="btn btn-primary">Sign Up</router-link>
+
+                    <!-- Show Login/Signup -->
+                    <router-link 
+                        v-if="!authStore.isLoggedIn"
+                        to="/auth?mode=login" 
+                        class="btn btn-outline-primary me-2"
+                    >
+                        Login
+                    </router-link>
+
+                    <router-link 
+                        v-if="!authStore.isLoggedIn"
+                        to="/auth?mode=signup" 
+                        class="btn btn-primary"
+                    >
+                        Sign Up
+                    </router-link>
+
+                    <!-- Show Logout -->
+                    <button 
+                        v-if="authStore.isLoggedIn"
+                        @click="handleLogout"
+                        class="btn btn-danger"
+                    >
+                        Logout
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
     <router-view />
 </template>
+
+<script setup>
+import { authStore } from "@/services/auth";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+function handleLogout() {
+    authStore.logout();
+    router.push("/");
+}
+</script>
 
 <style>
     #app {
