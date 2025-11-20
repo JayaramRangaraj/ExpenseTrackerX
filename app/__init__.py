@@ -14,6 +14,6 @@ app.config.from_object("app.config")
 db.init_app(app)
 migrate.init_app(app, db)
 jwt.init_app(app)
-CORS(app, supports_credentials=True, origins=["http://localhost:8080"])
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 app.register_blueprint(auth_routes.auth_bp)
