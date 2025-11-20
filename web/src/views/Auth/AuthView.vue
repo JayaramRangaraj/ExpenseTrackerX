@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthLogic } from './useAuthLogic.ts'
+import { useAuthentication } from './useAuthentication.ts'
 
-const { mode, name, email, password, message, isError, isLoading, handleSubmit } = useAuthLogic()
+const { mode, name, email, password, message, isError, isLoading, handleSubmit } = useAuthentication()
 </script>

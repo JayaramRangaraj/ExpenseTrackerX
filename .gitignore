@@ -27,6 +27,7 @@ web/.pnpm-store/
 *.swp
 .DS_Store
 Thumbs.db
+.eslintcache
 
 # Build artifacts
 *.egg-info/

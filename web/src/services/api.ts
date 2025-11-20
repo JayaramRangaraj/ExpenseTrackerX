@@ -9,7 +9,7 @@ const serverConnection: AxiosInstance = axios.create({
 })
 
 export interface SignupData {
-  name: string
+  name?: string
   email: string
   password: string
 }
