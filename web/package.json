@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "project" : "concurrently \"pnpm vite\" \"cd .. && .venv/bin/python3 wsgi.py\"",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -37,6 +38,7 @@
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
+    "concurrently": "^9.2.1",
     "eslint": "^9.37.0",
     "eslint-plugin-playwright": "^2.2.2",
     "eslint-plugin-vue": "~10.5.0",
