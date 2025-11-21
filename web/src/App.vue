@@ -1,71 +1,84 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { BApp } from 'bootstrap-vue-next'
+import { authstore } from '@/services/auth'
+
+function handleLogout() {
+	authstore.logout()
+}
 </script>
 
 <template>
-	<header>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-			<div class="container">
-				<!-- Brand -->
-				<router-link class="navbar-brand d-flex align-items-center" to="/">
-					<span class="fw-semibold">MyApp</span>
-				</router-link>
+	<BApp>
+		<header>
+			<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+				<div class="container">
+					<router-link class="navbar-brand" to="/">
+						<span class="fw-semibold">MyApp</span>
+					</router-link>
 
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarMenu"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
+					<button
+						class="navbar-toggler"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#navbarMenu"
+					>
+						<span class="navbar-toggler-icon"></span>
+					</button>
 
-				<div class="collapse navbar-collapse" id="navbarMenu">
-					<!-- NOT LOGGED IN NAVBAR -->
-					<!-- <ul v-if="!authStore.isLoggedIn" class="navbar-nav ms-auto mb-2 mb-lg-0"> -->
-					<li class="nav-item">
-						<router-link class="nav-link" to="/" exact-active-class="active">Home</router-link>
-					</li>
-					<li class="nav-item">
-						<router-link class="nav-link" to="/about" exact-active-class="active"
-							>About</router-link
-						>
-					</li>
-					<li class="nav-item">
-						<router-link class="nav-link" to="/contact" exact-active-class="active"
-							>Contact</router-link
-						>
-					</li>
-					<!-- </ul> -->
+					<div class="collapse navbar-collapse" id="navbarMenu">
+						<!-- NOT LOGGED IN NAV -->
+						<ul v-if="!authstore.isLoggedIn" class="navbar-nav ms-auto mb-2 mb-lg-0">
+							<li class="nav-item">
+								<router-link class="nav-link" to="/">Home</router-link>
+							</li>
 
-					<!-- LOGGED IN NAVBAR -->
-					<!-- <ul v-else class="navbar-nav ms-auto mb-2 mb-lg-0"> -->
-					<li class="nav-item">
-						<router-link class="nav-link" to="/dashboard">Dashboard</router-link>
-					</li>
-					<li class="nav-item">
-						<router-link class="nav-link" to="/expenses">Expenses</router-link>
-					</li>
-					<li class="nav-item">
-						<router-link class="nav-link" to="/profile">Profile</router-link>
-					</li>
-					<!-- </ul> -->
+							<li class="nav-item">
+								<router-link class="nav-link" to="/about">About</router-link>
+							</li>
 
-					<!-- Right-aligned Buttons -->
-					<div class="d-flex">
-						<!-- Show Login/Signup -->
-						<router-link to="/auth?mode=login" class="btn btn-outline-primary me-2">
-							Login
-						</router-link>
+							<li class="nav-item">
+								<router-link class="nav-link" to="/contact">Contact</router-link>
+							</li>
 
-						<router-link to="/auth?mode=signup" class="btn btn-primary"> Sign Up </router-link>
+							<div class="d-flex">
+								<router-link to="/auth?mode=login" class="btn btn-outline-primary me-2">
+									Login
+								</router-link>
+								<router-link to="/auth?mode=signup" class="btn btn-primary">Sign Up</router-link>
+							</div>
+						</ul>
 
-						<!-- Show Logout -->
+						<!-- LOGGED IN NAV -->
+						<ul v-else class="navbar-nav ms-auto mb-2 mb-lg-0">
+							<li class="nav-item">
+								<router-link class="nav-link" to="/dashboard">Dashboard</router-link>
+							</li>
+
+							<li class="nav-item">
+								<router-link class="nav-link" to="/expenses">Expenses</router-link>
+							</li>
+
+							<li class="nav-item">
+								<router-link class="nav-link" to="/profile">Profile</router-link>
+							</li>
+
+							<button @click="handleLogout" class="btn btn-danger ms-3">Logout</button>
+						</ul>
 					</div>
 				</div>
-			</div>
-		</nav>
-	</header>
+			</nav>
+		</header>
+	</BApp>
 
 	<RouterView />
 </template>
+
+<style>
+#app {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+}
+</style>
